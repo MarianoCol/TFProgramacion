@@ -78,9 +78,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'bdCine',
         'USER': 'admin',
-        'PASSWORD': 'Pibes20',
-        'HOST': '127.0.0.1',
-        'PORT': '8080',
+        'PASSWORD': '41644749',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
