@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # propias
+    'consultas',
 ]
 
 MIDDLEWARE = [
@@ -76,9 +79,9 @@ WSGI_APPLICATION = 'cine.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bdCine',
-        'USER': 'admin',
-        'PASSWORD': '41644749',
+        'NAME': 'Cine',
+        'USER': 'root',
+        'PASSWORD': '123456',
         'HOST': 'localhost',
         'PORT': '',
     }
