@@ -4,8 +4,8 @@ from django.db import models
 class Pelicula(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
-    duracion = models.TimeField()
-    descripcion = models.TextField(max_length=100)
+    duracion = models.DurationField()
+    descripcion = models.TextField(max_length=250)
     detalle = models.TextField(max_length=500)
     GENEROS_DISPONIBLES = [
         ('INDEFINIDO', 'Indefinido'),
@@ -34,7 +34,7 @@ class Pelicula(models.Model):
         ('PLUS18', '+18'),
     ]
     clasificacion = models.CharField(
-        max_length=5,
+        max_length=8,
         choices=CLASIFICACIONES,
         default='SINC',
     )
