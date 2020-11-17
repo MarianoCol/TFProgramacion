@@ -50,6 +50,9 @@ class Pelicula(models.Model):
     fechaComienzo = models.DateField()
     fechaFinal = models.DateField()
 
+    def __unicode__(self):
+        return self.nombre
+
 class Sala(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=10) # ej. SALA1, SALA2, SALA3, ...
@@ -68,7 +71,7 @@ class Sala(models.Model):
     
 class Proyeccion(models.Model):
     id = models.AutoField(primary_key=True)
-    # sala = [Objeto Sala?]
+    sala = models.ForeignKey(Sala, on_delete=models.CASCADE, default=1)
     # pelicula = [Objeto Pelicula?]
     # fechaInicio = [ObjetoPelicula.fechaComienzo?]
     # fechaFin = [ObjetoPelicula.fechaFinal?]

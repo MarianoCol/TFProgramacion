@@ -80,10 +80,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'Cine',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': 'localhost',
-        'PORT': '',
+        'USER': 'admin',
+        'PASSWORD': '123456789',
+        'HOST': 'cine-database.cqw7ldkonqzz.sa-east-1.rds.amazonaws.com',
+        'PORT': '3306',
     }
 }
 
