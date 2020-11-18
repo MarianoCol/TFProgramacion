@@ -50,7 +50,7 @@ class Pelicula(models.Model):
     fechaComienzo = models.DateField()
     fechaFinal = models.DateField()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.nombre
 
 class Sala(models.Model):
@@ -68,12 +68,15 @@ class Sala(models.Model):
     )
     filas = models.PositiveSmallIntegerField()
     asientos = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return self.nombre
     
 class Proyeccion(models.Model):
     id = models.AutoField(primary_key=True)
-    sala = models.ForeignKey(Sala, on_delete=models.CASCADE, default=1)
-    # pelicula = [Objeto Pelicula?]
-    # fechaInicio = [ObjetoPelicula.fechaComienzo?]
+    sala_id = models.ForeignKey(Sala, on_delete=models.CASCADE, default=1)
+    pelicula_id = models.ForeignKey(Pelicula, on_delete=models.CASCADE, default=1)
+    # fechaInicio = # [ObjetoPelicula.fechaComienzo?]
     # fechaFin = [ObjetoPelicula.fechaFinal?]
     hora_proyeccion = models.DateTimeField()
     ESTADOS_PROYECCION = [
@@ -88,8 +91,9 @@ class Proyeccion(models.Model):
 
 class Butaca(models.Model):
     id = models.AutoField(primary_key=True)
-    # proyeccion = [Objeto Proyeccion?]
+    proyeccion = models.ForeignKey(Proyeccion, on_delete=models.CASCADE, default=1)
     fecha_venta = models.DateTimeField()
     # Estos lugares no pueden ser de algun lugar ya ocupado
     fila = models.PositiveSmallIntegerField()
     asiento = models.PositiveSmallIntegerField()
+
