@@ -89,6 +89,9 @@ class Proyeccion(models.Model):
         default='ACTIVO',
     )
 
+    def __str__(self):
+        return f'S:{self.sala_id}, P:{self.pelicula_id} T:{self.hora_proyeccion}'
+
 class Butaca(models.Model):
     id = models.AutoField(primary_key=True)
     proyeccion = models.ForeignKey(Proyeccion, on_delete=models.CASCADE, default=1)
@@ -96,4 +99,7 @@ class Butaca(models.Model):
     # Estos lugares no pueden ser de algun lugar ya ocupado
     fila = models.PositiveSmallIntegerField()
     asiento = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return f'Proyeccion: [{self.proyeccion}] | Venta: [{self.fecha_venta} F: {self.fila} A: {self.asiento}]'
 
