@@ -39,15 +39,31 @@ def pelicula_list(request):
         return JsonResponse(peliculas_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-def pelicula_detalle(request, nombre):
+def pelicula_detalle(request, nombre, fechaInicio, fechaFin):
     try:
-        pelicula = Pelicula.objects.get(nombre=nombre)
+        # fechaInicio = datetime.strptime(fechaInicio, '%Y-%m-%d')
+        # fechaFin = datetime.strptime(fechaFin, '%Y-%m-%d')
+        pelicula = Pelicula.objects.get(nombre=nombre, fechaComienzo=fechaInicio, fechaFinal=fechaFin)
+
     except Pelicula.DoesNotExist:
-        return JsonResponse({'Error': 'La pelicula no existe'}, status=status.HTTP_404_NOT_FOUND)
+        return JsonResponse({'mensaje': 'La pelicula no existe o el rango de fechas es incorrecto'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         pelicula_serializer = ConsultaSerializer(pelicula)
+
         return JsonResponse(pelicula_serializer.data)
+
+@api_view(['GET'])
+def pelicula_fechas(request, fechaInicio, fechaFin):
+    pelicula = Pelicula.objects.filter(fechaComienzo__gte=fechaInicio, fechaFinal__lte=fechaFin)
+
+    if pelicula.count() == 0:
+        return JsonResponse({'mensaje': 'No hay peliculas en este rango'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        pelicula_serializer = ConsultaSerializer(pelicula, many=True)
+
+        return JsonResponse(pelicula_serializer.data, safe=False)
 
 @api_view(['GET', 'POST'])
 def sala_list(request):
@@ -69,7 +85,7 @@ def sala_list(request):
             return JsonResponse(salas_serialazer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(salas_serialazer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def sala_detalle(request, nombre):
     try:
         sala = Sala.objects.get(nombre=nombre)
@@ -87,3 +103,7 @@ def sala_detalle(request, nombre):
             salas_serializer.save() 
             return JsonResponse(salas_serializer.data) 
         return JsonResponse(salas_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE': 
+        sala.delete() 
+        return JsonResponse({'Hecho': 'La sala ha sido eliminada satisfactoriamente!'}, status=status.HTTP_204_NO_CONTENT)
