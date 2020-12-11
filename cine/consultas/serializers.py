@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from consultas.models import Pelicula, Sala
+from consultas.models import Pelicula, Sala, Butaca, Proyeccion
 
 class ConsultaSerializer(serializers.ModelSerializer):
 
@@ -25,3 +25,16 @@ class SalaSerializer(serializers.ModelSerializer):
         'estado',
         'filas',
         'asientos')
+
+
+class ButacaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Butaca
+        fields = (
+            'id',
+            'proyeccion',
+            'fecha_venta',
+            'fila',
+            'asiento'
+        )

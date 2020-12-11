@@ -5,17 +5,14 @@ from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 
-from consultas.models import Pelicula, Sala
-from consultas.serializers import ConsultaSerializer, SalaSerializer
+from consultas.models import Pelicula, Sala, Butaca, Proyeccion
+from consultas.serializers import ConsultaSerializer, SalaSerializer, ButacaSerializer
 from rest_framework.decorators import api_view
 
 # Vistas
 
 def index(request):
     return HttpResponse("CineMerka")
-
-def butacas(request):
-    return HttpResponse('Butacas')
 
 @api_view(['GET', 'POST'])
 def pelicula_list(request):
@@ -105,5 +102,39 @@ def sala_detalle(request, nombre):
         return JsonResponse(salas_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE': 
-        sala.delete() 
+        sala.delete()
         return JsonResponse({'Hecho': 'La sala ha sido eliminada satisfactoriamente!'}, status=status.HTTP_204_NO_CONTENT)
+
+# Endpoint de Butacas.
+@api_view(['GET'])
+# Traer todas las butacas
+def butacas_list(request):
+    butacas = Butaca.objects.all()
+    butacas_serializer = ButacaSerializer(butacas, many=True)
+    return JsonResponse(butacas_serializer.data, safe=False)
+
+# Traer una butaca por su id
+@api_view(['GET'])
+def butaca_reservada(request, id):
+    try:
+        butaca = Butaca.objects.get(pk=id)
+    except Butaca.DoesNotExist:
+        return JsonResponse({'mensaje': 'Esta butaca no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+    return JsonResponse(ButacaSerializer(butaca).data, safe=False)
+
+# Subir una butaca
+@api_view(['POST'])
+def butaca_reserva(request, proyeccion, fila, asiento):
+    try:
+        butaca = Butaca.objects.get(proyeccion)
+    except Butaca.DoesNotExist:
+        return JsonResponse({'mensaje': 'Esa proyeccion no existe'}, status=status.HTTP_400_BAD_REQUEST)
+    # Como eligo proyec, fila y asiento?
+    butaca_data = JSONParser().parse(request)
+    serializer = ButacaSerializer(data=butaca_data)
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
