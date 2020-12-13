@@ -1,21 +1,28 @@
 from django.shortcuts import render
 
 from django.http import HttpResponse
+from django.template import loader
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 
-from consultas.models import Pelicula, Sala
-from consultas.serializers import ConsultaSerializer, SalaSerializer
+<<<<<<< HEAD
+from consultas.models import Pelicula, Sala, Proyeccion
+from consultas.serializers import ConsultaSerializer, SalaSerializer, ProyeccionSerializer
+=======
+from consultas.models import Pelicula, Sala, Butaca, Proyeccion
+from consultas.serializers import ConsultaSerializer, SalaSerializer, ButacaSerializer
+>>>>>>> 7ae7c295fd06fcecddcc4901faf30addf4d5ff42
 from rest_framework.decorators import api_view
 
 # Vistas
 
 def index(request):
-    return HttpResponse("CineMerka")
-
-def butacas(request):
-    return HttpResponse('Butacas')
+    template = loader.get_template('polls/index.html')
+    context = {
+        'prueba': True,
+    }
+    return HttpResponse(template.render(context, request))
 
 @api_view(['GET', 'POST'])
 def pelicula_list(request):
@@ -105,5 +112,74 @@ def sala_detalle(request, nombre):
         return JsonResponse(salas_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE': 
-        sala.delete() 
+        sala.delete()
         return JsonResponse({'Hecho': 'La sala ha sido eliminada satisfactoriamente!'}, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+def proyeccion_list(request):
+    lista_peliculas = []
+    lista_salas = []
+    if request.method == 'GET':
+        proyecciones = Proyeccion.objects.all()
+        for proyeccion in proyecciones:
+            pelicula = Pelicula.objects.get(id=proyecciones.pelicula_id)
+            sala = Sala.objects.get(id=proyecciones.sala_id)
+            if pelicula.nombre == nombre:
+                lista_peliculas.append(pelicula)
+                lista_salas.append(sala)
+
+        proyecciones_serialazer = ProyeccionSerializer(proyecciones, many=True)
+        salas_serialazer = SalaSerializer(lista_salas)
+        pelicula_serializer = ConsultaSerializer(lista_peliculas)
+        return JsonResponse(proyecciones_serialazer.data, salas_serialazer.data, pelicula_serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        proyeccion_data = JSONParser().parse(request)
+        proyecciones_serialazer = ProyeccionSerializer(data=proyeccion_data)
+        if proyecciones_serialazer.is_valid():
+            proyecciones_serialazer.save()
+            return JsonResponse(proyecciones_serialazer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(proyecciones_serialazer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT'])
+def proyeccion_detalle(request, id):
+    try:
+        proyeccion = Proyeccion.objects.get()
+    except Sala.DoesNotExist:
+        return JsonResponse({'Error': 'La sala no existe'})
+
+# Endpoint de Butacas.
+@api_view(['GET'])
+# Traer todas las butacas
+def butacas_list(request):
+    butacas = Butaca.objects.all()
+    butacas_serializer = ButacaSerializer(butacas, many=True)
+    return JsonResponse(butacas_serializer.data, safe=False)
+
+# Traer una butaca por su id
+@api_view(['GET'])
+def butaca_reservada(request, id):
+    try:
+        butaca = Butaca.objects.get(pk=id)
+    except Butaca.DoesNotExist:
+        return JsonResponse({'mensaje': 'Esta butaca no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+    return JsonResponse(ButacaSerializer(butaca).data, safe=False)
+
+# Subir una butaca
+@api_view(['POST'])
+def butaca_reserva(request, proyeccion, fila, asiento):
+    try:
+        butaca = Butaca.objects.get(proyeccion)
+    except Butaca.DoesNotExist:
+        return JsonResponse({'mensaje': 'Esa proyeccion no existe'}, status=status.HTTP_400_BAD_REQUEST)
+    # Como eligo proyec, fila y asiento?
+    butaca_data = JSONParser().parse(request)
+    serializer = ButacaSerializer(data=butaca_data)
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
