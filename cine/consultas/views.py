@@ -6,13 +6,8 @@ from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 
-<<<<<<< HEAD
-from consultas.models import Pelicula, Sala, Proyeccion
-from consultas.serializers import ConsultaSerializer, SalaSerializer, ProyeccionSerializer
-=======
+from consultas.serializers import ConsultaSerializer, SalaSerializer, ProyeccionSerializer, ButacaSerializer
 from consultas.models import Pelicula, Sala, Butaca, Proyeccion
-from consultas.serializers import ConsultaSerializer, SalaSerializer, ButacaSerializer
->>>>>>> 7ae7c295fd06fcecddcc4901faf30addf4d5ff42
 from rest_framework.decorators import api_view
 
 # Vistas
@@ -181,5 +176,4 @@ def butaca_reserva(request, proyeccion, fila, asiento):
         serializer.save()
         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
     return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
