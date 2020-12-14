@@ -1,0 +1,108 @@
+<html>
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    </head>
+
+    <body style="text-align: center;">
+        <div id="peliculas">
+            <h2>Peliculas</h2>
+        </div>
+
+        <div>
+            <h2>Buscar peliculas por fechas</h2>
+            Fecha Inicio: <input type="date" id="fechaInicio" />
+            Fecha Fin: <input type="date" id="fechaFin" />
+            <button onclick="DetallePelicula('', '', '')">Buscar</button>
+        </div>
+
+        <div id="salas">
+            <h2>Salas</h2>
+        </div>
+
+        <div id="info"></div>
+
+        <script type="text/javascript">
+            function DetallePelicula(nombre, fechaInicio, fechaFin){
+                if(nombre != ''){
+                    $.get("/api/peliculas/" + nombre + "/" + fechaInicio + "/" + fechaFin, function (data) {
+                        $("#info").empty();
+                        $("#info").append("<h3>Detalles de " + Object.values(data)[1]) + "</h3>";
+                        $("#info").append("<strong>Duracion: </strong>" + Object.values(data)[2]);
+                        $("#info").append(", <strong>Descripcion: </strong>" + Object.values(data)[3]);
+                        $("#info").append(", <strong>Detalle: </strong>" + Object.values(data)[4]);
+                        $("#info").append(", <strong>Genero: </strong>" + Object.values(data)[5]);
+                        $("#info").append(", <strong>Clasificacion: </strong>" + Object.values(data)[6]);
+                        $("#info").append(", <strong>Estado: </strong>" + Object.values(data)[7]);
+                        $("#info").append(", <strong>Fecha Comienzo: </strong>" + Object.values(data)[8]);
+                        $("#info").append(", <strong>Fecha Final: </strong>" + Object.values(data)[9]);
+                    });
+                }else{
+                    $.ajax({
+                        url: "/api/peliculas/" + $("#fechaInicio").val() + "/" + $("#fechaFin").val(),
+                        type: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        async: true,
+                        success: function (result) {
+                            $("#info").empty();
+                            $.each(result, function (peliculas, row) {
+                                $("#info").append("<h3>" + Object.values(row)[1]) + "</h3>";
+                                $("#info").append("<strong>Duracion: </strong>" + Object.values(row)[2]);
+                                $("#info").append(", <strong>Descripcion: </strong>" + Object.values(row)[3]);
+                                $("#info").append(", <strong>Detalle: </strong>" + Object.values(row)[4]);
+                                $("#info").append(", <strong>Genero: </strong>" + Object.values(row)[5]);
+                                $("#info").append(", <strong>Clasificacion: </strong>" + Object.values(row)[6]);
+                                $("#info").append(", <strong>Estado: </strong>" + Object.values(row)[7]);
+                                $("#info").append(", <strong>Fecha Comienzo: </strong>" + Object.values(row)[8]);
+                                $("#info").append(", <strong>Fecha Final: </strong>" + Object.values(row)[9]);
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            if (jqXHR.status == 404) {
+                                $("#info").empty();
+                                $("#info").append("<h3>No hay películas en estas fechas</h3>");
+                            }
+                        }
+                    });
+                
+                }
+                
+            }
+        </script>
+
+        <script type="text/javascript">
+            $.get("/api/peliculas", function (data) {
+                $.each(data, function (peliculas, row) {
+                    $("#peliculas").append("<strong>Pelicula: " + row.nombre + ", Disponible: " + row.fechaComienzo + ", hasta: " + row.fechaFinal + "</strong>   <button onclick='DetallePelicula(\"" + row.nombre + "\",\"" + row.fechaComienzo + "\",\""  + row.fechaFinal + "\")'>Info</button><br />");
+                });
+            });
+
+            $.get("/api/salas", function (data) {
+                $.each(data, function (salas, row) {
+                    $("#salas").append("<strong>Nombre: " + row.nombre + ", Estado: " + row.estado + "</strong>   <button onclick='SalaDetalles(\"" + row.nombre + "\")'>Info</button><br />");
+                });
+            });
+        </script>
+
+        <script type="text/javascript">
+            function SalaDetalles(nombre){
+                if(nombre == ""){
+                    $.get("/api/salas", function (data) {
+                        $.each(data, function (salas, row) {
+                            $("#salas").append("<strong>Nombre: " + row.nombre + ", Estado: " + row.estado + "</strong>   <button onclick='SalaDetalles(\"" + row.nombre + "\")'>Info</button><br />");
+                        });
+                    });
+                }else{
+                    $.get("/api/salas/" + nombre, function (data) {
+                        $("#info").empty();
+                        $("#info").append("<h3>Detalles de " + Object.values(data)[1]) + "</h3>";
+                        $("#info").append("<strong>Estado: </strong>" + Object.values(data)[2]);
+                        $("#info").append(", <strong>Filas: </strong>" + Object.values(data)[3]);
+                        $("#info").append(", <strong>Asientos: </strong>" + Object.values(data)[4]);
+                    });
+                }
+            }
+            
+        </script>
+    </body>
+</html>

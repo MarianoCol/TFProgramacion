@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from consultas.models import Pelicula, Sala, Butaca, Proyeccion
 
-class PeliculaSerializer(serializers.ModelSerializer):
+class ConsultaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pelicula
@@ -15,22 +15,6 @@ class PeliculaSerializer(serializers.ModelSerializer):
         'estado',
         'fechaComienzo',
         'fechaFinal')
-
-class PeliculaRangoS(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Pelicula
-        fields = ('id',
-        'nombre',
-        'duracion',
-        'descripcion',
-        'detalle',
-        'genero',
-        'clasificacion',
-        'estado',
-        'fechaComienzo',
-        'fechaFinal',
-        'dias')
 
 class SalaSerializer(serializers.ModelSerializer):
 
@@ -47,8 +31,8 @@ class ProyeccionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Proyeccion
         fields = ('id',
-        'sala_id',
-        'pelicula_id',
+        'sala',
+        'pelicula',
         'fechaInicio',
         'fechaFin',
         'hora_proyeccion',

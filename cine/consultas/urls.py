@@ -1,13 +1,23 @@
 from django.urls import path, re_path
+from django.conf.urls import url
 from django.views.generic.base import RedirectView
 from django.contrib.staticfiles.storage import staticfiles_storage
 from . import views
 
 urlpatterns = [
+    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico'))),
     path('', views.index, name='index'),
-    re_path(r'^peliculas/$', views.listPeliculas, name='peliculas'),
-    # Rango de fecha de peliculas
-    re_path(r'^peliculas/(?P<fechaC>[12][890][0-9][0-9]-[01][0-9]-[0123][0-9])/(?P<fechaF>[12][890][0-9][0-9]-[01][0-9]-[0123][0-9])$', views.listPeliculas, name='peliculas_fechas'),
-    # Pelicula especifica con rango de proyeccion
-    re_path(r'^pelicilas/(?P<pelicula>[0-9a-zA-Z])/(?P<fechaC>[12][890][0-9][0-9]-[01][0-9]-[0123][0-9])/(?P<fechaF>[12][890][0-9][0-9]-[01][0-9]-[0123][0-9])$', views.rangoPelicula, name='rango_pelicula')
+    # Peliculas Views Urls
+    re_path(r'^api/peliculas/([a-zA-Z0-9 ]+)/(\d{4}[-/]\d{2}[-/]\d{2})/(\d{4}[-/]\d{2}[-/]\d{2})$', views.pelicula_detalle),
+    re_path(r'^api/peliculas/(\d{4}[-/]\d{2}[-/]\d{2})/(\d{4}[-/]\d{2}[-/]\d{2})$', views.pelicula_fechas),
+    # Salas Views Urls
+    re_path(r'^api/salas$', views.sala_list),
+    re_path(r'^api/salas/([a-zA-Z0-9 ]+)$', views.sala_detalle),
+    # Proyecciones Views Urls
+    re_path(r'^api/proyecciones$', views.proyeccion_list),
+    re_path(r'^api/proyecciones/([0-9]+)$', views.proyeccion_detalle),
+    # Butacas Views Urls
+    re_path(r'^api/butaca$', views.butacas_list),
+    re_path(r'^api/butaca/([0-9]+)$', views.butaca_reservada),
+    # re_path(r'^api/butaca/([a-zA-Z0-9]+)/([0-9]+)/([0-9]+)$', views.butaca_reserva),
 ]
