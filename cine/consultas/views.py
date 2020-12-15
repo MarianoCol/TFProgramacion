@@ -167,20 +167,28 @@ def butaca_reservada(request, id):
 
     return JsonResponse(ButacaSerializer(butaca).data, safe=False)
 
-# Subir una butaca
-@api_view(['POST'])
+# Subir una butaca o modificarla
+@api_view(['POST', 'PUT'])
 def butaca_reserva(request):
     try:
         butaca = Butaca.objects.get(proyeccion)
     except Butaca.DoesNotExist:
         return JsonResponse({'mensaje': 'Esa proyeccion no existe'}, status=status.HTTP_400_BAD_REQUEST)
-    # Como eligo proyec, fila y asiento?
-    butaca_data = JSONParser().parse(request)
-    serializer = ButacaSerializer(data=butaca_data)
-    if serializer.is_valid():
-        serializer.save()
-        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'POST':
+        butaca_data = JSONParser().parse(request)
+        serializer = ButacaSerializer(data=butaca_data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'PUT': 
+        butaca_data = JSONParser().parse(request) 
+        butaca_serializer = ButacaSerializer(butaca, data=butaca_data) 
+        if butaca_serializer.is_valid(): 
+            butaca_serializer.save() 
+            return JsonResponse(butaca_serializer.data, status=status.HTTP_200_OK) 
+        return JsonResponse(butaca_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Reporte butacas rendidas en un rango de tiempo
 def butacas_vendidas(request, fechaInicio, fechaFin):
@@ -207,6 +215,7 @@ def butacas_vendidas_proyeccion(request, proyeccion, fechaInicio, fechaFin):
 
         return JsonResponse(butaca_serializer.data, safe=False)
 
+# Endpoint reportes
 # La top 5 butacas mas vendidas
 @api_view(['GET'])
 def butacas_vendidas_rank(request, fechaInicio, fechaFin):    
