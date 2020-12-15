@@ -210,6 +210,7 @@ def butaca_reserva(request):
             return JsonResponse(butaca_serializer.data, status=status.HTTP_200_OK) 
         return JsonResponse(butaca_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Endpoint reportes <------------------------------------>
 # Reporte butacas rendidas en un rango de tiempo
 def butacas_vendidas(request, fechaInicio, fechaFin):
     butacas = Butaca.objects.filter(fecha_venta__gte=fechaInicio, fecha_venta__lte=fechaFin)
@@ -235,7 +236,6 @@ def butacas_vendidas_proyeccion(request, proyeccion, fechaInicio, fechaFin):
 
         return JsonResponse(butaca_serializer.data, safe=False, status=status.HTTP_200_OK)
 
-# Endpoint reportes <------------------------------------>
 # La top 5 butacas mas vendidas
 @api_view(['GET'])
 def butacas_vendidas_rank(request, fechaInicio, fechaFin):    
