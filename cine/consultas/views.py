@@ -1,15 +1,17 @@
 from django.shortcuts import render
-
 from django.http import HttpResponse
 from django.template import loader
 from django.http.response import JsonResponse
 from django.db.models import Q
+from django.db.models import Count, Sum
+
 from rest_framework.parsers import JSONParser
 from rest_framework import status
+from rest_framework.decorators import api_view
 
 from consultas.serializers import ConsultaSerializer, SalaSerializer, ProyeccionSerializer, ButacaSerializer
 from consultas.models import Pelicula, Sala, Butaca, Proyeccion
-from rest_framework.decorators import api_view
+
 import datetime
 # Vistas
 
@@ -167,7 +169,7 @@ def butaca_reservada(request, id):
 
 # Subir una butaca
 @api_view(['POST'])
-def butaca_reserva(request, proyeccion, fila, asiento):
+def butaca_reserva(request):
     try:
         butaca = Butaca.objects.get(proyeccion)
     except Butaca.DoesNotExist:
@@ -180,3 +182,75 @@ def butaca_reserva(request, proyeccion, fila, asiento):
         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
     return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Reporte butacas rendidas en un rango de tiempo
+def butacas_vendidas(request, fechaInicio, fechaFin):
+    butacas = Butaca.objects.filter(fecha_venta__gte=fechaInicio, fecha_venta__lte=fechaFin)
+
+    if butacas.count() == 0:
+        return JsonResponse({'mensaje': 'No hay peliculas en este rango'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        butaca_serializer = ButacaSerializer(butacas, many=True)
+
+        return JsonResponse(butaca_serializer.data, safe=False)
+
+# Butacas vendidas de una proyeccion
+@api_view(['GET'])
+def butacas_vendidas_proyeccion(request, proyeccion, fechaInicio, fechaFin):
+    butacas = Butaca.objects.filter(proyeccion=proyeccion, fecha_venta__gte=fechaInicio, fecha_venta__lte=fechaFin)
+
+    if butacas.count() == 0:
+        return JsonResponse({'mensaje': 'No hay peliculas en este rango'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        butaca_serializer = ButacaSerializer(butacas, many=True)
+
+        return JsonResponse(butaca_serializer.data, safe=False)
+
+# La top 5 butacas mas vendidas
+@api_view(['GET'])
+def butacas_vendidas_rank(request, fechaInicio, fechaFin):    
+    but = Butaca.objects.all().values('proyeccion_id').annotate(total=Count('proyeccion_id')).order_by('-total')[:5]    
+
+    if but.count() == 0:
+        return JsonResponse({'mensaje': 'No hay peliculas en este rango'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        cont = 1
+        newDic = {}
+        for butaca in but:
+            proyeccion = Proyeccion.objects.get(id=butaca['proyeccion_id'])
+            proyecciones_serialazer = ProyeccionSerializer(proyeccion)
+            
+            name = 'Top' + str(cont)
+            newDic[name] = proyecciones_serialazer.data
+            newDic[name]['Ventas'] = butaca['total']
+
+            cont += 1
+
+        return JsonResponse(newDic, safe=False)
+
+# Venta de peliculas
+@api_view(['GET'])
+def peliculas_rank(request):    
+    but = Butaca.objects.all().values('proyeccion_id').annotate(total=Count('proyeccion_id')).order_by('-total')   
+
+    if but.count() == 0:
+        return JsonResponse({'mensaje': 'No hay peliculas en este rango'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        cont = 1
+        newDic = {}
+        for butaca in but:
+            proyeccion = Proyeccion.objects.get(id=butaca['proyeccion_id'])
+            proyecciones_serialazer = ProyeccionSerializer(proyeccion)
+
+            pelicula = Pelicula.objects.get(id=proyecciones_serialazer.data['pelicula_id'], estado='ACTIVO')
+
+            if pelicula.count() != 0:
+                proyecciones_serialazer = ProyeccionSerializer(proyeccion)
+                pelicula_serialazer = ConsultaSerializer(pelicula)
+                
+                name = 'Top' + str(cont)
+                newDic[name] = pelicula_serialazer.data
+                newDic[name]['Ventas'] = butaca['total']
