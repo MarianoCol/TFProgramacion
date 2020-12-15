@@ -22,7 +22,7 @@ urlpatterns = [
     re_path(r'^api/butaca$', views.butacas_list),
     re_path(r'^api/butaca/reservar$', views.butaca_reservada),
     re_path(r'^api/butaca/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.butacas_vendidas),
-    re_path(r'^api/butaca/([0-9]+)/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.butacas_vendidas_proyeccion),
+    re_path(r'^api/butaca/(?P<proyeccion>[0-9]+)/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.butacas_vendidas_proyeccion),
     # Rank Views Urls
     re_path(r'^api/butacaRank/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.butacas_vendidas_rank),
     re_path(r'^api/peliculasRank$', views.peliculas_rank),
