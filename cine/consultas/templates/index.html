@@ -21,6 +21,39 @@
 
         <div id="info"></div>
 
+        <div id="informes">
+            <h2>Informes</h2>
+            <h3>Butacas vendidas en un rango de tiempo</h3>
+            Proyeccion: <select id="proyeccionId"></select> 
+            Fecha Inicio: <input type="date" id="fechaInicioButacasRango" />
+            Fecha Fin: <input type="date" id="fechaFinButacasRango" />
+            <button onclick="ButacasRango()">Buscar</button>
+
+            <br />
+
+            
+            
+            <br />
+        </div>
+
+        <div id="infoInformes"></div>
+
+        <!-- InicioValores -->
+        <script type="text/javascript">
+            $.get("/api/peliculas", function (data) {
+                $.each(data, function (peliculas, row) {
+                    $("#peliculas").append("<strong>Pelicula: " + row.nombre + ", Disponible: " + row.fechaComienzo + ", hasta: " + row.fechaFinal + "</strong>   <button onclick='DetallePelicula(\"" + row.nombre + "\",\"" + row.fechaComienzo + "\",\""  + row.fechaFinal + "\")'>Info</button><br />");
+                });
+            });
+
+            $.get("/api/salas", function (data) {
+                $.each(data, function (salas, row) {
+                    $("#salas").append("<strong>Nombre: " + row.nombre + ", Estado: " + row.estado + "</strong>   <button onclick='SalaDetalles(\"" + row.nombre + "\")'>Info</button><br />");
+                });
+            });
+        </script>
+
+        <!-- DetallePelicula -->
         <script type="text/javascript">
             function DetallePelicula(nombre, fechaInicio, fechaFin){
                 if(nombre != ''){
@@ -70,20 +103,7 @@
             }
         </script>
 
-        <script type="text/javascript">
-            $.get("/api/peliculas", function (data) {
-                $.each(data, function (peliculas, row) {
-                    $("#peliculas").append("<strong>Pelicula: " + row.nombre + ", Disponible: " + row.fechaComienzo + ", hasta: " + row.fechaFinal + "</strong>   <button onclick='DetallePelicula(\"" + row.nombre + "\",\"" + row.fechaComienzo + "\",\""  + row.fechaFinal + "\")'>Info</button><br />");
-                });
-            });
-
-            $.get("/api/salas", function (data) {
-                $.each(data, function (salas, row) {
-                    $("#salas").append("<strong>Nombre: " + row.nombre + ", Estado: " + row.estado + "</strong>   <button onclick='SalaDetalles(\"" + row.nombre + "\")'>Info</button><br />");
-                });
-            });
-        </script>
-
+        <!-- SalaDetalles -->
         <script type="text/javascript">
             function SalaDetalles(nombre){
                 if(nombre == ""){
@@ -104,5 +124,47 @@
             }
             
         </script>
+
+        <!-- InicioValoresInformes -->
+        <script type="text/javascript">
+            $.get("/api/proyecciones", function (data) {
+                $("#proyeccionId").append("<option value=''>Seleccionar</option>");
+                $.each(data, function (proyecciones, row) {
+                    $("#proyeccionId").append("<option value='" + row.id + "'>" + row.id + "</option>");
+                });
+            });
+        </script>
+
+        <!-- Reporte butacas rendidas en un rango de tiempo -->
+        <script type="text/javascript">
+            function ButacasRango(){
+                if($("#proyeccionId").val() != ''){
+                    $.get("/api/butaca/" + $("#proyeccionId").val() + "/" + $("#fechaInicioButacasRango").val() + "/" + $("#fechaFinButacasRango").val() , function (data) {
+                        $("#infoInformes").empty();
+                        $("#infoInformes").append("<h3>Butacas vendidas, " + $("#fechaInicioButacasRango").val() + " hasta " + $("#fechaFinButacasRango").val() + ", proyeccion: " + $("#proyeccionId").val() + "</h3>");
+
+                        $.each(data, function (peliculas, row) {
+                            $("#infoInformes").append("<p>Proyeccion:" + row.proyeccion + ", fila: " + row.fila + ", asiento: " + row.asiento + ", fecha_venta: " + row.fecha_venta + "</p>");
+                        });
+                    });
+                }
+                else{
+                    $.get("/api/butaca/" + $("#fechaInicioButacasRango").val() + "/" + $("#fechaFinButacasRango").val() , function (data) {
+                        $("#infoInformes").empty();
+                        $("#infoInformes").append("<h3>Butacas vendidas, " + $("#fechaInicioButacasRango").val() + " hasta " + $("#fechaFinButacasRango").val() + "</h3>");
+
+                        $.each(data, function (peliculas, row) {
+                            $("#infoInformes").append("<p>Proyeccion:" + row.proyeccion + ", fila: " + row.fila + ", asiento: " + row.asiento + ", fecha_venta: " + row.fecha_venta + "</p>");
+                        });
+                    });
+                }
+            }
+        </script>
+
+        <!-- Butacas vendidas de una proyeccion -->
+        <script type="text/javascript">
+
+        </script>
+
     </body>
 </html>

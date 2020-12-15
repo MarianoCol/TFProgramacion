@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from django.http.response import JsonResponse
-from django.db.models import Q
 from django.db.models import Count, Sum
 
 from rest_framework.parsers import JSONParser
@@ -38,7 +37,7 @@ def peliculas(request):
 @api_view(['GET'])
 def pelicula_detalle(request, nombre, fechaInicio, fechaFin):
     try:
-        pelicula = Pelicula.objects.get(Q(nombre=nombre))
+        pelicula = Pelicula.objects.get(nombre=nombre)
     except Pelicula.DoesNotExist:
         return JsonResponse({'mensaje': 'La pelicula no existe'}, status=status.HTTP_404_NOT_FOUND)
 
