@@ -15,7 +15,9 @@ urlpatterns = [
     re_path(r'^api/salas/([a-zA-Z0-9 ]+)$', views.sala_detalle),
     # Proyecciones Views Urls
     re_path(r'^api/proyecciones$', views.proyeccion_list),
-    re_path(r'^api/proyecciones/([0-9]+)$', views.proyeccion_detalle),
+    re_path(r'^api/proyecciones/rango/(\d{4}[-/]\d{2}[-/]\d{2})/(\d{4}[-/]\d{2}[-/]\d{2})$', views.proyeccion_rango),
+    # 2020-09-10T12:00:00Z
+    re_path(r'^api/proyecciones/fecha/(?P<peli>[a-zA-Z0-9 ]+)/(?P<fecha>\d{4}[-/]\d{2}[-/]\d{2}T[0-9][0-9]:[0-9][0-9]:[0-9][0-9]Z)$', views.proyeccion_fecha),
     # Butacas Views Urls
     re_path(r'^api/butaca$', views.butacas_list),
     re_path(r'^api/butaca/reservar$', views.butaca_reservada),

@@ -102,8 +102,8 @@ def sala_detalle(request, nombre):
         return JsonResponse({'Hecho': 'La sala ha sido eliminada satisfactoriamente!'}, status=status.HTTP_204_NO_CONTENT)
 
 # Endpoint de Proyeccion
-# Trear las proyecciones activas y subir una nueva proyeccion
-@api_view(['GET', 'POST'])
+# Trear las proyecciones activas, subir una nueva proyeccion y modificar proyeccion.
+@api_view(['GET', 'POST', 'PUT'])
 def proyeccion_list(request):
     if request.method == 'GET':
         proyecciones = Proyeccion.objects.filter(estado="ACTIVO")
@@ -112,8 +112,9 @@ def proyeccion_list(request):
         for proyeccion in proyecciones_serialazer.data:
             pelicula = ConsultaSerializer(Pelicula.objects.get(id=proyeccion["pelicula"]))
             sala = SalaSerializer(Sala.objects.get(id=proyeccion["sala"]))
-            proyeccion["pelicula"] = pelicula.data
-            proyeccion["sala"] = sala.data
+            if sala.data["estado"] == "HABILITADA" and pelicula.data["estado"] == "ACTIVO":
+                proyeccion["pelicula"] = pelicula.data
+                proyeccion["sala"] = sala.data
 
         return JsonResponse(proyecciones_serialazer.data, safe=False, status=status.HTTP_200_OK)
 
@@ -125,18 +126,6 @@ def proyeccion_list(request):
             return JsonResponse(proyecciones_serialazer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(proyecciones_serialazer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# 
-@api_view(['GET', 'PUT', 'DELETE'])
-def proyeccion_detalle(request, clave):
-    try:
-        proyeccion = Proyeccion.objects.get(id=clave)
-    except Proyeccion.DoesNotExist:
-        return JsonResponse({'Error': 'La sala no existe'}, status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        proyeccion_serializer = ProyeccionSerializer(proyeccion)
-        return JsonResponse(proyeccion.data)
-
     elif request.method == 'PUT': 
         proyeccion_data = JSONParser().parse(request) 
         proyeccion_serializer = ProyeccionSerializer(proyeccion, data=proyeccion_data) 
@@ -145,9 +134,29 @@ def proyeccion_detalle(request, clave):
             return JsonResponse(proyeccion_serializer.data, status=status.HTTP_200_OK) 
         return JsonResponse(proyeccion_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE': 
-        proyeccion.delete()
-        return JsonResponse({'Hecho': 'La proyeccion ha sido eliminada satisfactoriamente!'}, status=status.HTTP_204_NO_CONTENT)
+# Trear una proyeccion por rango de fechas
+@api_view(['GET'])
+def proyeccion_rango(request, fechaInicio, fechaFin):
+    proyeccion = Proyeccion.objects.filter(fechaInicio__gte=fechaInicio, fechaFin__lte=fechaFin)
+
+    if proyeccion.count() == 0:
+        return JsonResponse({'mensaje': 'No hay proyecciones en este rango'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        proyeccion_serializer = ProyeccionSerializer(proyeccion, many=True)
+        return JsonResponse(proyeccion_serializer.data, safe=False, status=status.HTTP_200_OK)
+
+# Trear una proyeccion y una fecha
+@api_view(['GET'])
+def proyeccion_fecha(request, peli, fecha):
+    try:
+        nombre_pelicula = Pelicula.objects.values('id').get(nombre=peli)
+        proyeccion = Proyeccion.objects.get(pelicula=nombre_pelicula['id'], hora_proyeccion=fecha)
+    except Proyeccion.DoesNotExist:
+        return JsonResponse({'mensaje': 'No existe proyeccion para esa pelicula'}, status=status.HTTP_404_NOT_FOUND)   
+    if request.method == 'GET':
+        proyeccion_serializer = ProyeccionSerializer(proyeccion)
+        return JsonResponse(proyeccion_serializer.data, safe=False, status=status.HTTP_200_OK)
 
 # Endpoint de Butacas.
 @api_view(['GET'])
