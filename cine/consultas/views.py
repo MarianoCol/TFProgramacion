@@ -251,25 +251,38 @@ def butacas_vendidas_rank(request, fechaInicio, fechaFin):
 
 # Venta de peliculas
 @api_view(['GET'])
-def peliculas_rank(request):    
-    but = Butaca.objects.all().values('proyeccion_id').annotate(total=Count('proyeccion_id')).order_by('-total')   
+def peliculas_rank(request):
+    proyes = Proyeccion.objects.all().values('pelicula_id', 'id').annotate(total=Count('pelicula_id')).order_by('-total')
 
-    if but.count() == 0:
+    if proyes.count() == 0:
         return JsonResponse({'mensaje': 'No hay peliculas en este rango'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         cont = 1
         newDic = {}
-        for butaca in but:
-            proyeccion = Proyeccion.objects.get(id=butaca['proyeccion_id'])
-            proyecciones_serialazer = ProyeccionSerializer(proyeccion)
+        for proye in proyes:
+            butacas = Butaca.objects.all().filter(proyeccion=proye['id']).values('proyeccion_id').annotate(total=Count('proyeccion_id')).order_by('-total')
 
-            pelicula = Pelicula.objects.get(id=proyecciones_serialazer.data['pelicula_id'], estado='ACTIVO')
-
-            if pelicula.count() != 0:
-                proyecciones_serialazer = ProyeccionSerializer(proyeccion)
+            for butaca in butacas:
+                pelicula = Pelicula.objects.get(id=proye['pelicula_id'], estado='ACTIVO')
                 pelicula_serialazer = ConsultaSerializer(pelicula)
-                
-                name = 'Top' + str(cont)
-                newDic[name] = pelicula_serialazer.data
-                newDic[name]['Ventas'] = butaca['total']
+
+                if pelicula != {}:
+                    if (cont == 1):
+                        name = 'Top' + str(cont)
+                        newDic[name] = pelicula_serialazer.data
+                        newDic[name]['Ventas'] = butaca['total']
+
+                        cont += 1
+
+                    elif (pelicula_serialazer.data['nombre'] != newDic['Top' + str(cont - 1)]['nombre']):
+                        name = 'Top' + str(cont)
+                        newDic[name] = pelicula_serialazer.data
+                        newDic[name]['Ventas'] = butaca['total']
+
+                        cont += 1
+
+                    elif (pelicula_serialazer.data['nombre'] == newDic['Top' + str(cont - 1)]['nombre']):
+                        newDic['Top' + str(cont - 1)]['Ventas'] += butaca['total']
+
+        return JsonResponse(newDic, safe=False)
