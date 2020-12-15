@@ -22,7 +22,7 @@ def index(request):
     }
     return HttpResponse(template.render(context, request))
 
-# Endpoint de Peliculas.
+# Endpoint de Peliculas.  <------------------------------------>
 # Traer disponibilidad de una pelicula
 @api_view(['GET'])
 def pelicula_detalle(request, nombre, fechaInicio, fechaFin):
@@ -60,7 +60,7 @@ def pelicula_fechas(request, fechaInicio, fechaFin):
         pelicula_serializer = ConsultaSerializer(pelicula, many=True)
         return JsonResponse(pelicula_serializer.data, status=status.HTTP_200_OK, safe=False)
 
-# Endpoint de Salas.
+# Endpoint de Salas.  <------------------------------------>
 # Trear todas las salas y crear nueva sala
 @api_view(['GET', 'POST'])
 def sala_list(request):
@@ -101,7 +101,7 @@ def sala_detalle(request, nombre):
         sala.delete()
         return JsonResponse({'Hecho': 'La sala ha sido eliminada satisfactoriamente!'}, status=status.HTTP_204_NO_CONTENT)
 
-# Endpoint de Proyeccion
+# Endpoint de Proyeccion <------------------------------------>
 # Trear las proyecciones activas, subir una nueva proyeccion y modificar proyeccion.
 @api_view(['GET', 'POST', 'PUT'])
 def proyeccion_list(request):
@@ -158,9 +158,9 @@ def proyeccion_fecha(request, peli, fecha):
         proyeccion_serializer = ProyeccionSerializer(proyeccion)
         return JsonResponse(proyeccion_serializer.data, safe=False, status=status.HTTP_200_OK)
 
-# Endpoint de Butacas.
-@api_view(['GET'])
+# Endpoint de Butacas.  <------------------------------------>
 # Traer todas las butacas
+@api_view(['GET'])
 def butacas_list(request):
     butacas = Butaca.objects.all()
     butacas_serializer = ButacaSerializer(butacas, many=True)
@@ -225,7 +225,7 @@ def butacas_vendidas_proyeccion(request, proyeccion, fechaInicio, fechaFin):
 
         return JsonResponse(butaca_serializer.data, safe=False)
 
-# Endpoint reportes
+# Endpoint reportes <------------------------------------>
 # La top 5 butacas mas vendidas
 @api_view(['GET'])
 def butacas_vendidas_rank(request, fechaInicio, fechaFin):    
