@@ -174,6 +174,7 @@ def butaca_reserva(request):
         butaca = Butaca.objects.get(proyeccion)
     except Butaca.DoesNotExist:
         return JsonResponse({'mensaje': 'Esa proyeccion no existe'}, status=status.HTTP_400_BAD_REQUEST)
+
     if request.method == 'POST':
         butaca_data = JSONParser().parse(request)
         serializer = ButacaSerializer(data=butaca_data)

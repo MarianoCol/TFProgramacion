@@ -18,8 +18,7 @@ urlpatterns = [
     re_path(r'^api/proyecciones/([0-9]+)$', views.proyeccion_detalle),
     # Butacas Views Urls
     re_path(r'^api/butaca$', views.butacas_list),
-    re_path(r'^api/butaca/([0-9]+)$', views.butaca_reservada),
-    re_path(r'^api/butaca/([0-9]+)$', views.butaca_reservada),
+    re_path(r'^api/butaca/reservar$', views.butaca_reservada),
     re_path(r'^api/butaca/(\d{4}[-/]\d{2}[-/]\d{2})/(\d{4}[-/]\d{2}[-/]\d{2})$', views.butacas_vendidas),
     re_path(r'^api/butaca/([0-9]+)/(\d{4}[-/]\d{2}[-/]\d{2})/(\d{4}[-/]\d{2}[-/]\d{2})$', views.butacas_vendidas_proyeccion),
     # Rank Views Urls
