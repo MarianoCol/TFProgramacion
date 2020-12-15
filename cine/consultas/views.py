@@ -23,6 +23,17 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 # Endpoint de Peliculas.  <------------------------------------>
+# Treaer todas las peliculas
+@api_view(['GET'])
+def peliculas(request):
+    if request.method == 'GET':
+        try:
+            peliculas = Pelicula.objects.all()
+        except Pelicula.DoesNotExist:
+            return JsonResponse({'mensaje': 'No hay peliculas'}, status=status.HTTP_404_NOT_FOUND)
+        peliculas_serializer = ConsultaSerializer(peliculas, many=True)
+        return JsonResponse(peliculas_serializer.data, safe=False, status=status.HTTP_200_OK)
+
 # Traer disponibilidad de una pelicula
 @api_view(['GET'])
 def pelicula_detalle(request, nombre, fechaInicio, fechaFin):
@@ -174,7 +185,7 @@ def butaca_reservada(request, id):
     except Butaca.DoesNotExist:
         return JsonResponse({'mensaje': 'Esta butaca no existe'}, status=status.HTTP_404_NOT_FOUND)
 
-    return JsonResponse(ButacaSerializer(butaca).data, safe=False)
+    return JsonResponse(ButacaSerializer(butaca).data, safe=False, status=status.HTTP_200_OK)
 
 # Subir una butaca o modificarla
 @api_view(['POST', 'PUT'])
@@ -210,7 +221,7 @@ def butacas_vendidas(request, fechaInicio, fechaFin):
     if request.method == 'GET':
         butaca_serializer = ButacaSerializer(butacas, many=True)
 
-        return JsonResponse(butaca_serializer.data, safe=False)
+        return JsonResponse(butaca_serializer.data, safe=False, status=status.HTTP_200_OK)
 
 # Butacas vendidas de una proyeccion
 @api_view(['GET'])
@@ -223,7 +234,7 @@ def butacas_vendidas_proyeccion(request, proyeccion, fechaInicio, fechaFin):
     if request.method == 'GET':
         butaca_serializer = ButacaSerializer(butacas, many=True)
 
-        return JsonResponse(butaca_serializer.data, safe=False)
+        return JsonResponse(butaca_serializer.data, safe=False, status=status.HTTP_200_OK)
 
 # Endpoint reportes <------------------------------------>
 # La top 5 butacas mas vendidas
@@ -247,7 +258,7 @@ def butacas_vendidas_rank(request, fechaInicio, fechaFin):
 
             cont += 1
 
-        return JsonResponse(newDic, safe=False)
+        return JsonResponse(newDic, safe=False, status=status.HTTP_200_OK)
 
 # Venta de peliculas
 @api_view(['GET'])
@@ -285,4 +296,4 @@ def peliculas_rank(request):
                     elif (pelicula_serialazer.data['nombre'] == newDic['Top' + str(cont - 1)]['nombre']):
                         newDic['Top' + str(cont - 1)]['Ventas'] += butaca['total']
 
-        return JsonResponse(newDic, safe=False)
+        return JsonResponse(newDic, safe=False, status=status.HTTP_200_OK)

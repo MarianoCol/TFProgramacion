@@ -8,6 +8,7 @@ urlpatterns = [
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico'))),
     path('', views.index, name='index'),
     # Peliculas Views Urls
+    re_path(r'^api/peliculas/$', views.peliculas),
     re_path(r'^api/peliculas/(?P<nombre>[a-zA-Z0-9 ]+)/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.pelicula_detalle),
     re_path(r'^api/peliculas/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.pelicula_fechas),
     # Salas Views Urls
