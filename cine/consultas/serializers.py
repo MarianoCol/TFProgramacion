@@ -14,7 +14,7 @@ class ConsultaSerializer(serializers.ModelSerializer):
         'clasificacion',
         'estado',
         'fechaComienzo',
-        'fechaFinal')
+        'fechaFinalizacion')
 
 class SalaSerializer(serializers.ModelSerializer):
 

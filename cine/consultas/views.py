@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 from consultas.serializers import ConsultaSerializer, SalaSerializer, ProyeccionSerializer, ButacaSerializer
 from consultas.models import Pelicula, Sala, Butaca, Proyeccion
 
-import datetime
+import urllib, json
 # Vistas
 
 def index(request):
@@ -64,7 +64,7 @@ def pelicula_detalle(request, nombre, fechaInicio, fechaFin):
 # Traer peliculas en un rango de fechas
 @api_view(['GET'])
 def pelicula_fechas(request, fechaInicio, fechaFin):
-    pelicula = Pelicula.objects.filter(fechaComienzo__gte=fechaInicio, fechaFinal__lte=fechaFin)
+    pelicula = Pelicula.objects.filter(fechaComienzo__gte=fechaInicio, fechaFinalizacion__lte=fechaFin)
 
     if pelicula.count() == 0:
         return JsonResponse({'mensaje': 'No hay peliculas en este rango'}, status=status.HTTP_404_NOT_FOUND)
@@ -300,3 +300,19 @@ def peliculas_rank(request):
 
         valores_ord = dict(sorted(newDic.items(), reverse=True))
         return JsonResponse(valores_ord, safe=False, status=status.HTTP_200_OK)
+
+# Consumo endpoint de profesores
+
+@api_view(['POST'])
+def peliculas_profes(request):
+    if request.method == 'POST':
+        url = "http://localhost:8001/api/pelicula/"
+        response = urllib.request.urlopen(url)
+        datas = json.loads(response.read())
+        for peli in datas:
+            pelicula = ConsultaSerializer(data=peli)
+            if pelicula.is_valid():
+                pelicula.save()
+            else:
+                return JsonResponse({'mensaje': 'hubo un error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return JsonResponse({'mensaje':'Cargado'}, safe=False, status=status.HTTP_200_OK)

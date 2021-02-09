@@ -27,4 +27,6 @@ urlpatterns = [
     re_path(r'^api/butacaRank/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.butacas_vendidas_rank),
     re_path(r'^api/peliculasRank$', views.peliculas_rank),
     # re_path(r'^api/butaca/([a-zA-Z0-9]+)/([0-9]+)/([0-9]+)$', views.butaca_reserva),
+    # Endpoint Profes
+    re_path(r'^api/peliculasProfes$', views.peliculas_profes)
 ]

@@ -1,54 +1,27 @@
 from django.db import models
+import django.utils.timezone as tz
 
 # Create your models here.
 class Pelicula(models.Model):
     id = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=50)
-    duracion = models.DurationField()
-    descripcion = models.TextField(max_length=250)
-    detalle = models.TextField(max_length=500)
-    GENEROS_DISPONIBLES = [
-        ('INDEFINIDO', 'Indefinido'),
-        ('ACCION', 'Accion'),
-        ('CIENCIA_FICCION', 'Ciencia Ficcion'),
-        ('COMEDIA', 'Comedia'),
-        ('DRAMA', 'Drama'),
-        ('FANTASIA', 'Fantasia'),
-        ('MELODRAMA', 'Melodrama'),
-        ('MUSICAL', 'Musical'),
-        ('ROMANCE', 'Romance'),
-        ('SUSPENSO', 'Suspenso'),
-        ('TERROR', 'Terror'),
-        ('DOCUMENTAL', 'Documental'),
-    ]
+    nombre = models.CharField(max_length=300)
+    duracion = models.IntegerField()
+    descripcion = models.TextField(max_length=1000)
+    detalle = models.TextField(max_length=10000)
     genero = models.CharField(
-        max_length=15,
-        choices=GENEROS_DISPONIBLES,
+        max_length=100,
         default='INDEFINIDO',
         )
-    CLASIFICACIONES = [
-        ('SINC', 'Sin clasificar'),
-        ('ATP', 'ATP'),
-        ('PLUS13', '+13'),
-        ('PLUS16', '+16'),
-        ('PLUS18', '+18'),
-    ]
     clasificacion = models.CharField(
-        max_length=8,
-        choices=CLASIFICACIONES,
+        max_length=100,
         default='SINC',
     )
-    ESTADOS_PELICULAS = [
-        ('ACTIVO', 'Activo'),
-        ('INACTIVO', 'Inactivo'),
-    ]
     estado = models.CharField(
-        max_length=8,
-        choices=ESTADOS_PELICULAS,
+        max_length=10,
         default='INACTIVO',
     )
-    fechaComienzo = models.DateField()
-    fechaFinal = models.DateField()
+    fechaComienzo = models.DateTimeField(default=tz.now)
+    fechaFinalizacion = models.DateTimeField(default=tz.now)
 
     def __str__(self):
         return self.nombre
