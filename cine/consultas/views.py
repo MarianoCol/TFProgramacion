@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from django.http.response import JsonResponse
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Q
 
 from rest_framework.parsers import JSONParser
 from rest_framework import status
@@ -38,20 +38,23 @@ def peliculas(request):
 def pelicula_detalle(request, nombre, fechaInicio, fechaFin):
     try:
         pelicula = Pelicula.objects.get(nombre=nombre)
+        proyecciones = Proyeccion.objects.filter(
+            Q(pelicula=pelicula.id) &
+            (Q(fechaInicio__lte=fechaFin) & Q(fechaFin__gte=fechaInicio)) |
+            (Q(fechaInicio__lte=fechaInicio) & Q(fechaInicio__gte=fechaInicio)) |
+            (Q(fechaFin__gte=fechaFin) & Q(fechaFin__lte=fechaFin))
+        )
     except Pelicula.DoesNotExist:
         return JsonResponse({'mensaje': 'La pelicula no existe'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        fechaInicio = datetime.datetime.strptime(fechaInicio, '%Y-%m-%d').date()
-        fechaFin = datetime.datetime.strptime(fechaFin, '%Y-%m-%d').date()
-        if fechaInicio <= pelicula.fechaComienzo:
-            fechaInicio = pelicula.fechaComienzo
-        if fechaFin > pelicula.fechaFinal:
-            fechaFin = pelicula.fechaFinal
-        delta = fechaFin - fechaInicio
         disponible = []
-        for i in range(delta.days + 1):
-            disponible.append(fechaInicio + datetime.timedelta(days=i))
+        proyeccion_serializer = ProyeccionSerializer(proyecciones, many=True)
+        
+        for i in proyeccion_serializer.data:
+            disponible.append(i['fechaInicio'])
+        # for i in range(delta.days + 1):
+        #     disponible.append(fechaInicio + datetime.timedelta(days=i))
         pelicula_serializer = ConsultaSerializer(pelicula)
         newDic = {}
         newDic.update(pelicula_serializer.data)
@@ -295,4 +298,5 @@ def peliculas_rank(request):
                     elif (pelicula_serialazer.data['nombre'] == newDic['Top' + str(cont - 1)]['nombre']):
                         newDic['Top' + str(cont - 1)]['Ventas'] += butaca['total']
 
-        return JsonResponse(newDic, safe=False, status=status.HTTP_200_OK)
+        valores_ord = dict(sorted(newDic.items(), reverse=True))
+        return JsonResponse(valores_ord, safe=False, status=status.HTTP_200_OK)
