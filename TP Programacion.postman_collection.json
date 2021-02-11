@@ -1,0 +1,738 @@
+{
+	"info": {
+		"_postman_id": "9e66f744-58b1-4fce-825e-476b6e0861c2",
+		"name": "TP Programacion",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Api Profesores",
+			"item": [
+				{
+					"name": "Inside Out",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"nombre\": \"Inside Out (2015)\",\n        \"duracion\": 95,\n        \"descripcion\": \"After young Riley is uprooted from her Midwest life and moved to San Francisco, her emotions - Joy, Fear, Anger, Disgust and Sadness - conflict on how best to navigate a new city, house, and school. \",\n        \"detalle\": \"Growing up can be a bumpy road, and it's no exception for Riley, who is uprooted from her Midwest life when her father starts a new job in San Francisco. Like all of us, Riley is guided by her emotions - Joy, Fear, Anger, Disgust and Sadness. The emotions live in Headquarters, the control center inside Riley's mind, where they help advise her through everyday life. As Riley and her emotions struggle to adjust to a new life in San Francisco, turmoil ensues in Headquarters. Although Joy, Riley's main and most important emotion, tries to keep things positive, the emotions conflict on how best to navigate a new city, house and school.\",\n        \"genero\": \"Animation, Adventure, Comedy\",\n        \"clasificacion\": \"ATP\",\n        \"estado\": \"Activa\",\n        \"fechaComienzo\": \"2015-06-19T00:00:00+0000\",\n        \"fechaFinalizacion\": \"2003-07-15T00:00:00+0000\"\n    }"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8001/api/pelicula/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"pelicula",
+								""
+							]
+						},
+						"description": "cargar pelicula coco en docker"
+					},
+					"response": []
+				},
+				{
+					"name": "Soul",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"nombre\": \"Soul (2020)\",\n        \"duracion\": 100,\n        \"descripcion\": \"After landing the gig of a lifetime, a New York jazz pianist suddenly finds himself trapped in a strange land between Earth and the afterlife.\",\n        \"detalle\": \"AJoe is a middle-school band teacher whose life hasn't quite gone the way he expected. His true passion is jazz -- and he's good. But when he travels to another realm to help someone find their passion, he soon discovers what it means to have soul.\",\n        \"genero\": \"Animation, Adventure, Comedy, Family, Fantasy, Music\",\n        \"clasificacion\": \"ATP\",\n        \"estado\": \"Activa\",\n        \"fechaComienzo\": \"2021-02-14T00:00:00+0000\",\n        \"fechaFinalizacion\": \"2021-02-31T00:00:00+0000\"\n    }"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8001/api/pelicula/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"pelicula",
+								""
+							]
+						},
+						"description": "cargar pelicula Soul a docker"
+					},
+					"response": []
+				},
+				{
+					"name": "Coco",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"nombre\": \"Coco (2017)\",\n        \"duracion\": 105,\n        \"descripcion\": \"Aspiring musician Miguel, confronted with his family's ancestral ban on music, enters the Land of the Dead to find his great-great-grandfather, a legendary singer. \",\n        \"detalle\": \"Despite his family's baffling generations-old ban on music, Miguel dreams of becoming an accomplished musician like his idol, Ernesto de la Cruz. Desperate to prove his talent, Miguel finds himself in the stunning and colorful Land of the Dead following a mysterious chain of events. Along the way, he meets charming trickster Hector, and together, they set off on an extraordinary journey to unlock the real story behind Miguel's family history.\",\n        \"genero\": \"Animation, Adventure, Family\",\n        \"clasificacion\": \"ATP\",\n        \"estado\": \"Activa\",\n        \"fechaComienzo\": \"2021-03-14T00:00:00+0000\",\n        \"fechaFinalizacion\": \"2021-03-29T00:00:00+0000\"\n    }"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8001/api/pelicula/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"pelicula",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Finding Nemo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"nombre\": \"Finding Nemo (2003)\",\n        \"duracion\": 100,\n        \"descripcion\": \"After his son is captured in the Great Barrier Reef and taken to Sydney, a timid clownfish sets out on a journey to bring him home. \",\n        \"detalle\": \"A clown fish named Marlin lives in the Great Barrier Reef and loses his son, Nemo, after he ventures into the open sea, despite his father's constant warnings about many of the ocean's dangers. Nemo is abducted by a boat and netted up and sent to a dentist's office in Sydney. While Marlin ventures off to try to retrieve Nemo, Marlin meets a fish named Dory, a blue tang suffering from short-term memory loss. The companions travel a great distance, encountering various dangerous sea creatures such as sharks, anglerfish and jellyfish, in order to rescue Nemo from the dentist's office, which is situated by Sydney Harbour. While the two are searching the ocean far and wide, Nemo and the other sea animals in the dentist's fish tank plot a way to return to the sea to live their lives free again.\",\n        \"genero\": \"Animation, Adventure, Comedy\",\n        \"clasificacion\": \"ATP\",\n        \"estado\": \"Activa\",\n        \"fechaComienzo\": \"2003-05-30T00:00:00+0000\",\n        \"fechaFinalizacion\": \"2003-06-15T00:00:00+0000\"\n    }"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8001/api/pelicula/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"pelicula",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subir pelicuas desde docker a django",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:8000/api/peliculasProfes",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"peliculasProfes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer pelicula de Docker",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8001/api/pelicula/",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"pelicula",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Endpoints Consuta de peliculas",
+			"item": [
+				{
+					"name": "Consutlar TODAS las pelicuas Django",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/peliculas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"peliculas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer peliculas en rango de fecha",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/peliculas/2019-05-11/2021-01-01",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"peliculas",
+								"2019-05-11",
+								"2021-01-01"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer una pelicula, en rango de fechas, y proyecciones disponibles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/peliculas/Spiderman 2/2019-05-11/2020-10-11",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"peliculas",
+								"Spiderman 2",
+								"2019-05-11",
+								"2020-10-11"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Endpoints Manejo de Salas",
+			"item": [
+				{
+					"name": "Traer todas las salas en el sistema",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/salas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"salas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer un sala especifica",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/salas/3D",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"salas",
+								"3D"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar una sala",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"3D XD\",\n    \"estado\": \"HABILITADA\",\n    \"filas\": 60,\n    \"asientos\": 120\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/salas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"salas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar datos de una sala",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"3D XD\",\n    \"estado\": \"DESHABILITADA\",\n    \"filas\": 30,\n    \"asientos\": 100\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/salas/3D XD",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"salas",
+								"3D XD"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar una sala",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/salas/3D XD",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"salas",
+								"3D XD"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Endpoints Consulta de Proyeccion",
+			"item": [
+				{
+					"name": "Traer las proyecciones disponibles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/proyecciones",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"proyecciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer proyecciones en un rango de fechas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/proyecciones/rango/2019-04-11/2020-09-10",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"proyecciones",
+								"rango",
+								"2019-04-11",
+								"2020-09-10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer proyeccion en una fecha determinada",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/proyecciones/fecha/Spiderman 2/2020-09-10T12:00:00Z",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"proyecciones",
+								"fecha",
+								"Spiderman 2",
+								"2020-09-10T12:00:00Z"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subir una proyeccion nueva",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sala\":2,\n    \"pelicula\":2,\n    \"fechaInicio\":\"2021-01-01\",\n    \"fechaFin\":\"2021-02-02\",\n    \"hora_proyeccion\":\"2021-01-02T21:00:00Z\",\n    \"estado\":\"ACTIVO\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8000/api/proyecciones",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"proyecciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar una proyeccion",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sala\":2,\n    \"pelicula\":2,\n    \"fechaInicio\":\"2021-01-01\",\n    \"fechaFin\":\"2021-02-02\",\n    \"hora_proyeccion\":\"2021-01-02T21:00:00Z\",\n    \"estado\":\"ACTIVO\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8000/api/proyecciones",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"proyecciones"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Endpoint Consulta de Butacas",
+			"item": [
+				{
+					"name": "Traer todas las butacas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/butaca",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"butaca"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Treaer una butaca por id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/butaca/reservar/13",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"butaca",
+								"reservar",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subir una reserva de butaca",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n        \"proyeccion\": 12,\n        \"fecha_venta\": \"2021-02-10T17:00:00Z\",\n        \"fila\": 6,\n        \"asiento\": 8\n    }"
+						},
+						"url": {
+							"raw": "localhost:8000/api/butaca/reservar",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"butaca",
+								"reservar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar una butaca",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 13,\n    \"proyeccion\": 12,\n    \"fecha_venta\": \"2021-02-10T17:00:00Z\",\n    \"fila\": 15,\n    \"asiento\": 8\n}"
+						},
+						"url": {
+							"raw": "localhost:8000/api/butaca/reservar",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"butaca",
+								"reservar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Endpoint de Reportes",
+			"item": [
+				{
+					"name": "Traer butacas vendidas de una proyeccion en un rango de tiempo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/butaca/12/2021-01-10/2021-05-10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"butaca",
+								"12",
+								"2021-01-10",
+								"2021-05-10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer butacas vendias en un rango de fechas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/butaca/2021-01-10/2021-05-10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"butaca",
+								"2021-01-10",
+								"2021-05-10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ranking de top5 proyecciones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/butacaRank/2019-01-10/2021-05-10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"butacaRank",
+								"2019-01-10",
+								"2021-05-10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reporte de peliculas vendidas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
