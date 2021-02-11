@@ -140,7 +140,15 @@ def proyeccion_list(request):
         return JsonResponse(proyecciones_serialazer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'PUT': 
-        proyeccion_data = JSONParser().parse(request) 
+        proyeccion_data = JSONParser().parse(request)
+        try:
+            proyeccion = Proyeccion.objects.get(
+                sala=proyeccion_data['sala'],
+                pelicula=proyeccion_data['pelicula'],
+                hora_proyeccion=proyeccion_data['hora_proyeccion']
+            )
+        except:
+            return JsonResponse({'mensaje':'La proyeccion no existe'}, status=status.HTTP_400_BAD_REQUEST)
         proyeccion_serializer = ProyeccionSerializer(proyeccion, data=proyeccion_data) 
         if proyeccion_serializer.is_valid(): 
             proyeccion_serializer.save() 
@@ -306,9 +314,12 @@ def peliculas_rank(request):
 @api_view(['POST'])
 def peliculas_profes(request):
     if request.method == 'POST':
-        url = "http://localhost:8001/api/pelicula/"
-        response = urllib.request.urlopen(url)
-        datas = json.loads(response.read())
+        try:
+            url = "http://localhost:8001/api/pelicula/"
+            response = urllib.request.urlopen(url)
+            datas = json.loads(response.read())
+        except:
+            return JsonResponse({'mensaje': 'no se pudo conectar con la api'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         for peli in datas:
             pelicula = ConsultaSerializer(data=peli)
             if pelicula.is_valid():
