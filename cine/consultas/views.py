@@ -201,12 +201,11 @@ def butaca_reservada(request, id):
 @api_view(['POST', 'PUT'])
 def butaca_reserva(request):
     try:
-        butaca = Butaca.objects.get(proyeccion)
+        butaca_data = JSONParser().parse(request)
+        butaca = Butaca.objects.filter(proyeccion=butaca_data['proyeccion'])
     except Butaca.DoesNotExist:
         return JsonResponse({'mensaje': 'Esa proyeccion no existe'}, status=status.HTTP_400_BAD_REQUEST)
-
     if request.method == 'POST':
-        butaca_data = JSONParser().parse(request)
         serializer = ButacaSerializer(data=butaca_data)
         if serializer.is_valid():
             serializer.save()
@@ -214,7 +213,7 @@ def butaca_reserva(request):
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'PUT': 
-        butaca_data = JSONParser().parse(request) 
+        butaca = Butaca.objects.get(pk=butaca_data['id'])
         butaca_serializer = ButacaSerializer(butaca, data=butaca_data) 
         if butaca_serializer.is_valid(): 
             butaca_serializer.save() 
