@@ -18,7 +18,7 @@ class Pelicula(models.Model):
     )
     estado = models.CharField(
         max_length=10,
-        default='INACTIVO',
+        default='ACTIVA',
     )
     fechaComienzo = models.DateTimeField(default=tz.now)
     fechaFinalizacion = models.DateTimeField(default=tz.now)
@@ -49,8 +49,8 @@ class Proyeccion(models.Model):
     id = models.AutoField(primary_key=True)
     sala = models.ForeignKey(Sala, on_delete=models.CASCADE)
     pelicula = models.ForeignKey(Pelicula, on_delete=models.CASCADE)
-    fechaInicio = models.DateField(default="2019-01-01")
-    fechaFin = models.DateField(default="2020-01-01")
+    fechaInicio = models.DateField(default="01-01-2020")
+    fechaFin = models.DateField(default="01-01-2020")
     hora_proyeccion = models.DateTimeField()
     ESTADOS_PROYECCION = [
         ('ACTIVO', 'Activo'),

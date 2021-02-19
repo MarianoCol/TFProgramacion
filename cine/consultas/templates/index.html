@@ -23,16 +23,19 @@
 
         <div id="informes">
             <h2>Informes</h2>
+            <button onclick="PeliculasTop()">Top peliculas</button>
+
+            <br />
+            <br />
+
             <h3>Butacas vendidas en un rango de tiempo</h3>
+
             Proyeccion: <select id="proyeccionId"></select> 
             Fecha Inicio: <input type="date" id="fechaInicioButacasRango" />
             Fecha Fin: <input type="date" id="fechaFinButacasRango" />
             <button onclick="ButacasRango()">Buscar</button>
+            <button onclick="ButacasRangoTop()">Buscar top 5</button>
 
-            <br />
-
-            
-            
             <br />
         </div>
 
@@ -42,7 +45,7 @@
         <script type="text/javascript">
             $.get("/api/peliculas", function (data) {
                 $.each(data, function (peliculas, row) {
-                    $("#peliculas").append("<strong>Pelicula: " + row.nombre + ", Disponible: " + row.fechaComienzo + ", hasta: " + row.fechaFinal + "</strong>   <button onclick='DetallePelicula(\"" + row.nombre + "\",\"" + row.fechaComienzo + "\",\""  + row.fechaFinal + "\")'>Info</button><br />");
+                    $("#peliculas").append("<strong>Pelicula: " + row.nombre + ", Disponible: " + row.fechaComienzo + ", hasta: " + row.fechaFinalizacion + "</strong>   <button onclick='DetallePelicula(\"" + row.nombre + "\",\"" + row.fechaComienzo + "\",\""  + row.fechaFinalizacion + "\")'>Info</button><br />");
                 });
             });
 
@@ -143,7 +146,7 @@
                         $("#infoInformes").empty();
                         $("#infoInformes").append("<h3>Butacas vendidas, " + $("#fechaInicioButacasRango").val() + " hasta " + $("#fechaFinButacasRango").val() + ", proyeccion: " + $("#proyeccionId").val() + "</h3>");
 
-                        $.each(data, function (peliculas, row) {
+                        $.each(data, function (j, row) {
                             $("#infoInformes").append("<p>Proyeccion:" + row.proyeccion + ", fila: " + row.fila + ", asiento: " + row.asiento + ", fecha_venta: " + row.fecha_venta + "</p>");
                         });
                     });
@@ -153,7 +156,7 @@
                         $("#infoInformes").empty();
                         $("#infoInformes").append("<h3>Butacas vendidas, " + $("#fechaInicioButacasRango").val() + " hasta " + $("#fechaFinButacasRango").val() + "</h3>");
 
-                        $.each(data, function (peliculas, row) {
+                        $.each(data, function (j, row) {
                             $("#infoInformes").append("<p>Proyeccion:" + row.proyeccion + ", fila: " + row.fila + ", asiento: " + row.asiento + ", fecha_venta: " + row.fecha_venta + "</p>");
                         });
                     });
@@ -163,7 +166,29 @@
 
         <!-- Butacas vendidas de una proyeccion -->
         <script type="text/javascript">
+            function ButacasRangoTop(){
+                $.get("/api/butacaRank/" + $("#fechaInicioButacasRango").val() + "/" + $("#fechaFinButacasRango").val() , function (data) {
+                    $("#infoInformes").empty();
+                    $("#infoInformes").append("<h3>Proyecciones vendidas Top 5, " + $("#fechaInicioButacasRango").val() + " hasta " + $("#fechaFinButacasRango").val() + "</h3>");
 
+                    $.each(data, function (j, row) {
+                        $("#infoInformes").append("<p>Ventas: " + row.Ventas + " ,proyeccion:" + row.id + ", sala: " + row.sala + ", pelicula: " + row.pelicula + ", fechaInicio: " + row.fechaInicio + ", fechaFin: " + row.fechaFin + ", hora_proyeccion: " + row.hora_proyeccion + ", estado: " + row.estado + "</p>");
+                    });
+                });
+            }
+        </script>
+
+        <script type="text/javascript">
+            function PeliculasTop(){
+                $.get("/api/peliculasRank", function (data) {
+                    $("#infoInformes").empty();
+                    $("#infoInformes").append("<h3>Top Peliculas</h3>");
+
+                    $.each(data, function (j, row) {
+                        $("#infoInformes").append("<p>Ventas: " + row.Ventas + ", nombre:" + row.nombre + ", duracion: " + row.duracion + ", descripcion: " + row.descripcion + ", genero: " + row.genero + ", clasificacion: " + row.clasificacion + ", clasificacion: " + row.clasificacion + "</p>");
+                    });
+                });
+            }            
         </script>
 
     </body>

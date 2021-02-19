@@ -273,7 +273,7 @@ def butacas_vendidas_rank(request, fechaInicio, fechaFin):
 @api_view(['GET'])
 def peliculas_rank(request):
     proyes = Proyeccion.objects.all().values('pelicula_id', 'id').annotate(total=Count('pelicula_id')).order_by('-total')
-
+    
     if proyes.count() == 0:
         return JsonResponse({'mensaje': 'No hay peliculas en este rango'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -282,11 +282,11 @@ def peliculas_rank(request):
         newDic = {}
         for proye in proyes:
             butacas = Butaca.objects.all().filter(proyeccion=proye['id']).values('proyeccion_id').annotate(total=Count('proyeccion_id')).order_by('-total')
-
+            
             for butaca in butacas:
-                pelicula = Pelicula.objects.get(id=proye['pelicula_id'], estado='ACTIVO')
+                pelicula = Pelicula.objects.get(id=proye['pelicula_id'])
                 pelicula_serialazer = ConsultaSerializer(pelicula)
-
+                
                 if pelicula != {}:
                     if (cont == 1):
                         name = 'Top' + str(cont)
@@ -306,6 +306,7 @@ def peliculas_rank(request):
                         newDic['Top' + str(cont - 1)]['Ventas'] += butaca['total']
 
         valores_ord = dict(sorted(newDic.items(), reverse=True))
+        
         return JsonResponse(valores_ord, safe=False, status=status.HTTP_200_OK)
 
 # Consumo endpoint de profesores
