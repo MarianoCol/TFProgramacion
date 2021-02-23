@@ -315,15 +315,28 @@ def peliculas_rank(request):
 def peliculas_profes(request):
     if request.method == 'POST':
         try:
+            # Aniadir id externo, sincronizacion
             url = "http://localhost:8001/api/pelicula/"
             response = urllib.request.urlopen(url)
             datas = json.loads(response.read())
         except:
             return JsonResponse({'mensaje': 'no se pudo conectar con la api'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         for peli in datas:
-            pelicula = ConsultaSerializer(data=peli)
-            if pelicula.is_valid():
-                pelicula.save()
-            else:
-                return JsonResponse({'mensaje': 'hubo un error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            idP = int(peli['id'])
+            verifPelicula = Pelicula.objects.filter(idProveedor=idP)
+            try:
+                if dict(verifPelicula) == {}:  
+                    peli['idProveedor'] = peli['id']
+                    Pelicula_serializer = ConsultaSerializer(data=dict(peli)) 
+                    print(Pelicula_serializer)
+                    if Pelicula_serializer.is_valid():
+                        Pelicula_serializer.save()
+                    else:
+                        return JsonResponse({'mensaje': 'hubo un error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            except:
+                aaaaa = Pelicula.objects.get(idProveedor=peli['id'])
+                verifPelicula_serializer = ConsultaSerializer(aaaaa, data=verifPelicula.values().get())
+                if verifPelicula_serializer.is_valid():
+                    verifPelicula_serializer.save()                
+
         return JsonResponse({'mensaje':'Cargado'}, safe=False, status=status.HTTP_200_OK)

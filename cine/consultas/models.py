@@ -22,6 +22,7 @@ class Pelicula(models.Model):
     )
     fechaComienzo = models.DateTimeField(default=tz.now)
     fechaFinalizacion = models.DateTimeField(default=tz.now)
+    idProveedor = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.nombre
