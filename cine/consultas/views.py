@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.http.response import JsonResponse
 from django.db.models import Count, Sum, Q
+from django.forms.models import model_to_dict
 
 from rest_framework.parsers import JSONParser
 from rest_framework import status
@@ -315,28 +316,29 @@ def peliculas_rank(request):
 def peliculas_profes(request):
     if request.method == 'POST':
         try:
-            # Aniadir id externo, sincronizacion
             url = "http://localhost:8001/api/pelicula/"
             response = urllib.request.urlopen(url)
             datas = json.loads(response.read())
-        except:
-            return JsonResponse({'mensaje': 'no se pudo conectar con la api'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        for peli in datas:
-            idP = int(peli['id'])
-            verifPelicula = Pelicula.objects.filter(idProveedor=idP)
+        except Exception as ex:
+            return JsonResponse({'error': str(ex)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        if not datas:
+            return JsonResponse({'mensaje':'No hay peliculas externas'}, safe=False, status=status.HTTP_200_OK)
+        for peliExterna in datas:
+            idP = peliExterna['id']
+            peliExternaEnBase = Pelicula.objects.filter(idProveedor=idP)
             try:
-                if dict(verifPelicula) == {}:  
-                    peli['idProveedor'] = peli['id']
-                    Pelicula_serializer = ConsultaSerializer(data=dict(peli)) 
-                    print(Pelicula_serializer)
+                if not peliExternaEnBase:
+                    # Si la peli no esta en la base, la agregamos
+                    peliExterna['idProveedor'] = peliExterna['id']
+                    Pelicula_serializer = ConsultaSerializer(data=peliExterna)
                     if Pelicula_serializer.is_valid():
                         Pelicula_serializer.save()
-                    else:
-                        return JsonResponse({'mensaje': 'hubo un error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            except:
-                aaaaa = Pelicula.objects.get(idProveedor=peli['id'])
-                verifPelicula_serializer = ConsultaSerializer(aaaaa, data=verifPelicula.values().get())
-                if verifPelicula_serializer.is_valid():
-                    verifPelicula_serializer.save()                
-
-        return JsonResponse({'mensaje':'Cargado'}, safe=False, status=status.HTTP_200_OK)
+                else:
+                    # Si esta en la base, actualizamos
+                    peliExternaEnBaseDict = model_to_dict(peliExternaEnBase.get())
+                    peliExterna.pop('id')
+                    peliExternaEnBaseDict.update(peliExterna)
+                    peliExternaEnBase.update(**peliExternaEnBaseDict)
+            except Exception as ex:
+                return JsonResponse({'error': str(ex)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)             
+        return JsonResponse({'mensaje':'Base de peliculas, actualizada'}, safe=False, status=status.HTTP_200_OK)
