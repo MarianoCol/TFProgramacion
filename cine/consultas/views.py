@@ -258,8 +258,8 @@ def butaca_reserva(request):
     if request.method == 'POST':
         try:
             butaca_data = JSONParser().parse(request)
-            butaca = Butaca.objects.filter(proyeccion=butaca_data['proyeccion'])
-            if not butaca:
+            proyeccion = Proyeccion.objects.filter(pk=butaca_data['proyeccion'])
+            if not proyeccion:
                 return JsonResponse({'error': 'proyeccion no existe'}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 # Compruebo que no exista butaca asignada a esa proyeccion
