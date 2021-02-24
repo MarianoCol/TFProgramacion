@@ -36,15 +36,14 @@ def peliculas(request):
 
 # Traer disponibilidad de una pelicula
 @api_view(['GET'])
-def pelicula_detalle(request, nombre, fechaInicio, fechaFin):
+def pelicula_detalle(request, id, fechaInicio, fechaFin):
     try:
-        pelicula = Pelicula.objects.get(nombre=nombre)
+        pelicula = Pelicula.objects.get(pk=id)
         proyecciones = Proyeccion.objects.filter(
-            Q(pelicula=pelicula.id) &
-            (Q(fechaInicio__lte=fechaFin) & Q(fechaFin__gte=fechaInicio)) |
-            (Q(fechaInicio__lte=fechaInicio) & Q(fechaInicio__gte=fechaInicio)) |
-            (Q(fechaFin__gte=fechaFin) & Q(fechaFin__lte=fechaFin))
-        )
+            pelicula=id,
+            fechaInicio__range=[fechaInicio, fechaFin],
+            fechaFin__range=[fechaInicio, fechaFin]
+            )
     except Pelicula.DoesNotExist:
         return JsonResponse({'mensaje': 'La pelicula no existe'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -54,8 +53,6 @@ def pelicula_detalle(request, nombre, fechaInicio, fechaFin):
         
         for i in proyeccion_serializer.data:
             disponible.append(i['fechaInicio'])
-        # for i in range(delta.days + 1):
-        #     disponible.append(fechaInicio + datetime.timedelta(days=i))
         pelicula_serializer = ConsultaSerializer(pelicula)
         newDic = {}
         newDic.update(pelicula_serializer.data)
@@ -77,7 +74,7 @@ def pelicula_fechas(request, fechaInicio, fechaFin):
 # Endpoint de Salas.  <------------------------------------>
 # Trear todas las salas y crear nueva sala
 @api_view(['GET', 'POST'])
-def sala_list(request):
+def sala(request):
     if request.method == 'GET':
         salas = Sala.objects.all()
         salas_serialazer = SalaSerializer(salas, many=True)
@@ -93,44 +90,57 @@ def sala_list(request):
 
 # Treaer una sala, modificarla o eliminarla
 @api_view(['GET', 'PUT', 'DELETE'])
-def sala_detalle(request, nombre):
+def sala_detalle(request, id):
     try:
-        sala = Sala.objects.get(nombre=nombre)
+        sala = Sala.objects.get(pk=id)
     except Sala.DoesNotExist:
-        return JsonResponse({'Error': 'La sala no existe'}, status=status.HTTP_404_NOT_FOUND)
+        return JsonResponse({'error': 'La sala no existe'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         sala_serializer = SalaSerializer(sala)
         return JsonResponse(sala_serializer.data, status=status.HTTP_200_OK)
 
-    elif request.method == 'PUT': 
-        sala_data = JSONParser().parse(request) 
-        salas_serializer = SalaSerializer(sala, data=sala_data) 
-        if salas_serializer.is_valid(): 
-            salas_serializer.save() 
-            return JsonResponse(salas_serializer.data, status=status.HTTP_200_OK) 
-        return JsonResponse(salas_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PUT':
+        sala_data = JSONParser().parse(request)
+        try:
+            Sala.objects.filter(pk=id).update(**sala_data)
+            return JsonResponse({'update': sala_data}, status=status.HTTP_200_OK)
+        except Exception as ex: 
+            return JsonResponse({'error': str(ex)}, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE': 
-        sala.delete()
-        return JsonResponse({'Hecho': 'La sala ha sido eliminada satisfactoriamente!'}, status=status.HTTP_204_NO_CONTENT)
+    elif request.method == 'DELETE':
+        # Si la sala estaba habilitada la paso deshabilitada
+        if sala.estado == 'HABILITADA':
+            sala = Sala.objects.filter(pk=id).update(estado='DESHABILITADA')
+            return JsonResponse({'mensaje': 'estado de sala -> DESHABILITADA'}, status=status.HTTP_204_NO_CONTENT)
+        # Si la sala estaba deshabilitada la elimino definitivamente
+        else:
+            sala.delete()
+            return JsonResponse({'mensaje': 'sala eliminada definitivamente!'}, status=status.HTTP_204_NO_CONTENT)
+            
 
 # Endpoint de Proyeccion <------------------------------------>
 # Trear las proyecciones activas, subir una nueva proyeccion y modificar proyeccion.
 @api_view(['GET', 'POST', 'PUT'])
 def proyeccion_list(request):
     if request.method == 'GET':
-        proyecciones = Proyeccion.objects.filter(estado="ACTIVO")
-        proyecciones_serialazer = ProyeccionSerializer(proyecciones, many=True)
+        # Cada vez que se hace un get, se consulta si las salas estan habilitadas o estan las peliculas activas
+        proyecciones = Proyeccion.objects.all()
+        for proyeccion in proyecciones:
+            pelicula = Pelicula.objects.get(id=proyeccion.pelicula.id)
+            sala = Sala.objects.get(id=proyeccion.sala.id)
+            if sala.estado == "HABILITADA" and pelicula.estado == "ACTIVO":
+                Proyeccion.objects.update(estado='Activo')
 
-        for proyeccion in proyecciones_serialazer.data:
-            pelicula = ConsultaSerializer(Pelicula.objects.get(id=proyeccion["pelicula"]))
-            sala = SalaSerializer(Sala.objects.get(id=proyeccion["sala"]))
-            if sala.data["estado"] == "HABILITADA" and pelicula.data["estado"] == "ACTIVO":
-                proyeccion["pelicula"] = pelicula.data
-                proyeccion["sala"] = sala.data
-
-        return JsonResponse(proyecciones_serialazer.data, safe=False, status=status.HTTP_200_OK)
+        pActivs = Proyeccion.objects.filter(estado='Activo')
+        print(pActivs)
+        ret = {}
+        for ct, pA in enumerate(pActivs):
+            dicPro = model_to_dict(pA)
+            dicPro['pelicula'] = model_to_dict(pelicula)
+            dicPro['sala'] = model_to_dict(sala)
+            ret.update({str(ct): dicPro})
+        return JsonResponse(ret, status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
         proyeccion_data = JSONParser().parse(request)

@@ -33,7 +33,6 @@ class Sala(models.Model):
     ESTADOS_SALAS = [
         ('HABILITADA', 'Habilitada'),
         ('DESHABILITADA', 'Deshabilitada'),
-        ('ELIMINADA', 'Eliminada'),
     ]
     estado = models.CharField(
         max_length=13,

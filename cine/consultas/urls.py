@@ -9,15 +9,15 @@ urlpatterns = [
     path('', views.index, name='index'),
     # Peliculas Views Urls
     re_path(r'^api/peliculas$', views.peliculas),
-    re_path(r'^api/peliculas/(?P<nombre>[a-zA-Z0-9 ]+)/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.pelicula_detalle),
+    re_path(r'^api/peliculas/(?P<id>[0-9]+)/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.pelicula_detalle),
     re_path(r'^api/peliculas/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.pelicula_fechas),
     # Salas Views Urls
-    re_path(r'^api/salas$', views.sala_list),
-    re_path(r'^api/salas/(?P<nombre>[a-zA-Z0-9 ]+)$', views.sala_detalle),
+    re_path(r'^api/salas$', views.sala),
+    re_path(r'^api/salas/(?P<id>[0-9]+)$', views.sala_detalle),
     # Proyecciones Views Urls
     re_path(r'^api/proyecciones$', views.proyeccion_list),
     re_path(r'^api/proyecciones/rango/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.proyeccion_rango),
-    re_path(r'^api/proyecciones/fecha/(?P<peli>[a-zA-Z0-9 ]+)/(?P<fecha>\d{4}[-/]\d{2}[-/]\d{2}T[0-9][0-9]:[0-9][0-9]:[0-9][0-9]Z)$', views.proyeccion_fecha),
+    re_path(r'^api/proyecciones/fecha/(?P<peliId>[0-9]+)/(?P<fecha>\d{4}[-/]\d{2}[-/]\d{2}T[0-9][0-9]:[0-9][0-9]:[0-9][0-9]Z)$', views.proyeccion_fecha),
     # Butacas Views Urls
     re_path(r'^api/butaca$', views.butacas_list),
     re_path(r'^api/butaca/reservar$', views.butaca_reserva),
