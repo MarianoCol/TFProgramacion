@@ -16,12 +16,14 @@ urlpatterns = [
     re_path(r'^api/salas/(?P<id>[0-9]+)$', views.sala_detalle),
     # Proyecciones Views Urls
     re_path(r'^api/proyecciones$', views.proyeccion_list),
+    re_path(r'^api/proyecciones/(?P<id>[0-9]+)$', views.proyeccion_mod),
     re_path(r'^api/proyecciones/rango/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.proyeccion_rango),
     re_path(r'^api/proyecciones/fecha/(?P<peliId>[0-9]+)/(?P<fecha>\d{4}[-/]\d{2}[-/]\d{2}T[0-9][0-9]:[0-9][0-9]:[0-9][0-9]Z)$', views.proyeccion_fecha),
     # Butacas Views Urls
     re_path(r'^api/butaca$', views.butacas_list),
+    re_path(r'^api/butaca/(?P<id>[0-9]+)$', views.butaca_reservada),
     re_path(r'^api/butaca/reservar$', views.butaca_reserva),
-    re_path(r'^api/butaca/reservar/(?P<id>[0-9]+)$', views.butaca_reservada),
+    re_path(r'^api/butaca/mod/(?P<id>[0-9]+)$', views.butaca_mod),
     re_path(r'^api/butaca/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.butacas_vendidas),
     re_path(r'^api/butaca/(?P<proyeccion>[0-9]+)/(?P<fechaInicio>\d{4}[-/]\d{2}[-/]\d{2})/(?P<fechaFin>\d{4}[-/]\d{2}[-/]\d{2})$', views.butacas_vendidas_proyeccion),
     # Rank Views Urls

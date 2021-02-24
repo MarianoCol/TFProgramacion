@@ -16,7 +16,12 @@ class Pelicula(models.Model):
         max_length=100,
         default='SINC',
     )
+    ESTADOS_PELICULAS = [
+        ('ACTIVA', 'ACTIVA'),
+        ('INACTIVA', 'INACTIVA'),
+    ]
     estado = models.CharField(
+        choices=ESTADOS_PELICULAS,
         max_length=10,
         default='ACTIVA',
     )
@@ -31,8 +36,8 @@ class Sala(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     nombre = models.CharField(max_length=10, unique=True) # ej. SALA1, SALA2, SALA3, ...
     ESTADOS_SALAS = [
-        ('HABILITADA', 'Habilitada'),
-        ('DESHABILITADA', 'Deshabilitada'),
+        ('HABILITADA', 'HABILITADA'),
+        ('DESHABILITADA', 'DESHABILITADA'),
     ]
     estado = models.CharField(
         max_length=13,
@@ -53,8 +58,8 @@ class Proyeccion(models.Model):
     fechaFin = models.DateField(default="01-01-2020")
     hora_proyeccion = models.DateTimeField()
     ESTADOS_PROYECCION = [
-        ('ACTIVO', 'Activo'),
-        ('INACTIVO', 'Inactivo'),
+        ('ACTIVO', 'ACTIVO'),
+        ('INACTIVO', 'INACTIVO'),
     ]
     estado = models.CharField(
         max_length=8,
@@ -69,7 +74,6 @@ class Butaca(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     proyeccion = models.ForeignKey(Proyeccion, on_delete=models.CASCADE, default=1)
     fecha_venta = models.DateTimeField()
-    # Estos lugares no pueden ser de algun lugar ya ocupado
     fila = models.PositiveSmallIntegerField()
     asiento = models.PositiveSmallIntegerField()
 
