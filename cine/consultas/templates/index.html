@@ -45,7 +45,7 @@
         <script type="text/javascript">
             $.get("/api/peliculas", function (data) {
                 $.each(data, function (peliculas, row) {
-                    $("#peliculas").append("<strong>Pelicula: " + row.nombre + ", Disponible: " + row.fechaComienzo + ", hasta: " + row.fechaFinal + "</strong>   <button onclick='DetallePelicula(\"" + row.nombre + "\",\"" + row.fechaComienzo + "\",\""  + row.fechaFinal + "\")'>Info</button><br />");
+                    $("#peliculas").append("<strong>Pelicula: " + row.nombre + ", Disponible: " + row.fechaComienzo + ", hasta: " + row.fechaFinalizacion + "</strong>   <button onclick='DetallePelicula(\"" + row.nombre + "\",\"" + row.fechaComienzo + "\",\""  + row.fechaFinalizacion + "\")'>Info</button><br />");
                 });
             });
 
